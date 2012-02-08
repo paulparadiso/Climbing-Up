@@ -1,0 +1,48 @@
+<html>
+<head>
+  <style type="text/css" media="screen">
+  </style>
+  <script src="/static/js/jquery-1.7.1.min.js"></script>
+  <script src="/static/js/climbing.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/climbing.css" />
+  <title>Climbing Up</title>
+</head>
+<div id="wrapper">
+  <div id="lift-control" class="control">
+    <div id="lift">
+    </div>
+    <div id="lift-control-buttons">
+      <div class="lift-icon"><img src="/static/images/icons/lift_up.gif"/></div>
+      <div class="lift-icon"><img src="/static/images/icons/lift_down.gif"/></div>
+    </div>
+    <div id="lift-extras">
+		<div>
+			<form action="">
+				<input type="text" name="lift-amount" id="search" size="5" />		
+			</form>
+		</div>    
+    </div>
+    <div id="lift-details">
+		<div id="height-label">Current lift height:</div>
+		<div id="height-data">0.0</div>    
+    </div>
+  </div>
+  <div id="video-control" class="control">\
+    <div id="preview">
+    </div>
+    <div id="control-buttons">
+    <div class="icon"><img id="play-button" src="/static/images/icons/play.gif"/></div>
+    <div class="icon"><img id="stop-button" src="/static/images/icons/stop.gif"/></div>
+    <div class="icon"><img id="rewind-button" src="/static/images/icons/rewind.gif"/></div>
+    <div class="icon"><img id="fast_forward-button" src="/static/images/icons/fast_forward.gif"/></div>
+    <div class="icon"><img id="beginning-button" src="/static/images/icons/beginning.gif"/></div>
+    <div class="icon"><img id="end-button" src="/static/images/icons/end.gif"/></div>
+    <div id="video-time"></div>
+    </div>
+  </div>
+  <div id="script-editor">
+  </div>
+</div>
+<body>
+</body>
+</html>

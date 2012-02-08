@@ -1,0 +1,17 @@
+CC=avr-gcc
+OBJCOPY=avr-objcopy
+
+CFLAGS=-g -mmcu=at90s8515
+
+rom.hex : switches.out
+	$(OBJCOPY) -j .text -O ihex switches.out rom.hex
+
+switches.out : switches.o
+	$(CC) $(CFLAGS) -o switches.out -Wl,-Map,switches.map,switches.o
+
+switches.o : switches.c
+	$(CC) $(CFLAGS) -Os -c switches.c
+
+clean : 
+	rm -f *.o *.out *.map *.hex
+

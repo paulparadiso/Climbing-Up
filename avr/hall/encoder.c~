@@ -1,0 +1,179 @@
+#define F_CPU 16000000UL
+
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <avr/eeprom.h>
+#include <avr/pgmspace.h>
+#include <util/delay.h>
+#include <string.h>
+#include <stdio.h>
+
+#define BAUD_RATE 9600
+#define MYUBRR F_CPU / (16 * BAUD_RATE) - 1
+
+#define EEPROM_BLOCK_SIZE 256
+#define NUM_EEPROM_BLOCKS 8
+
+#define STRING_SIZE 64
+
+#define DELAY_MS 1000;
+
+char data_input_buffer[256];
+char data_output_buffer[256];
+uint8_t input_counter = 0;
+uint8_t output_counter = 0;
+
+const char noteon[13] = "/noteon/%d/\n";
+static char *noteoff = "/noteoff/%d/\n\0";
+char output_buffer[STRING_SIZE];
+char test_test[5];
+
+uint8_t delay_ms = 200;
+
+uint8_t pin_1 = 0;
+uint8_t pin_2 = 1;
+uint8_t pin_3 = 2;
+uint8_t pin_4 = 3;
+
+void serial_write_string(char *data_out);
+void sm_full_step_cw();
+void sm_full_step_ccw();
+
+char check_switch(char x)
+{
+  static char old_data;
+  char current_data;
+  current_data = ~PINA;
+  if ((current_data & (1<<x)) != (old_data & (1<<x))){
+    //UDR = current_data;
+    if(current_data & (1<<x) == 0){
+      //      sprintf(output_buffer,noteon,x);
+    } else {
+      //sprintf(output_buffer,noteoff,x);
+    }
+    serial_write_string(test_test);
+    old_data = current_data;
+    if(current_data == 1){
+      sm_full_step_cw();
+    }
+    if(current_data == 2){
+      sm_full_step_ccw();
+    }
+    PORTB = current_data;
+  }
+  return (~(old_data & (1<<x)));
+}
+
+void init_serial(void){
+  UCSRA = 0x00;
+  UCSRB = (1 << RXEN) | (1 << TXEN);
+  UCSRC = (1 << URSEL) | (1 << UCSZ0) | (1 << UCSZ1);
+  UBRRL = 103;
+}
+
+void serial_write(char data_out){
+  while((UCSRA & (1 << UDRE)) == 0){
+    ;
+  }
+  UDR = data_out;
+}
+
+void serial_write_string(char *data_out){
+  while(*data_out != '\n'){
+    serial_write(*data_out++);
+  }
+  serial_write('\n');
+}
+
+unsigned char serial_read(void){
+  while((UCSRA & (1 << RXC)) == 0){
+    ;
+  }
+  return UDR;
+}
+
+void process_serial_input(void){
+  unsigned char cmd = data_input_buffer[0];
+  uint8_t num_moves = (uint8_t)data_input_buffer[1];
+  uint8_t val;
+ 
+  if((char) cmd == 'f'){
+    while(num_moves > 0){
+      sm_full_step_cw();
+      num_moves--;
+    }
+  }
+  if((char) cmd == 'b'){
+    while(num_moves > 0){
+      sm_full_step_ccw();
+      num_moves--;
+    }
+  }
+  input_counter = 0;
+  PORTB = 0x00;
+}
+
+void sm_full_step_cw(){
+  PORTB = _BV(PB0);
+  _delay_ms(5);
+  PORTB = _BV(PB2);
+  _delay_ms(5);
+  PORTB = _BV(PB1);
+  _delay_ms(5);
+  PORTB = _BV(PB3);
+  _delay_ms(5);
+  PORTB = 0x00;
+}
+
+void sm_full_step_ccw(){
+  PORTB = _BV(PB2);
+  _delay_ms(5);
+  PORTB = _BV(PB0);
+  _delay_ms(5);
+  PORTB = _BV(PB3);
+  _delay_ms(5);
+  PORTB = _BV(PB1);
+  _delay_ms(5);
+  PORTB = 0x00;
+}
+
+void main(void)
+{
+  
+  //test_test = "test\n";
+  test_test[0] = 't';
+  test_test[1] = 'e';
+  test_test[2] = 's';
+  test_test[3] = (char)sizeof(test_test);
+  test_test[4] = '\n';
+
+
+
+  init_serial();
+
+  serial_write('s');
+
+  DDRB = 0xff;
+  PORTB = 0x00;
+
+  UCSRB |= (1 << RXCIE);
+  sei();
+
+  int i;
+
+  while(1){
+    for(i = 0; i < 8; i++){
+      check_switch(i);
+    }
+    //sm_full_step_cw();
+  }
+}
+
+ISR(USART_RXC_vect){
+  unsigned char b = serial_read();
+  data_input_buffer[input_counter++] = b;
+  if(b == '\n'){
+    PORTB = 0xFF;
+    process_serial_input();
+  }
+}

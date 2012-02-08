@@ -1,0 +1,18 @@
+CC=avr-gcc
+OBJCOPY=avr-objcopy
+
+//CFLAGS=-g -mmcu=atmega328p
+CFLAGS = -g -mmcu=atmega328p
+
+rom.hex : hall.out
+	$(OBJCOPY) -j .text -O ihex hall.out rom.hex
+
+hall.out : hall.o
+	$(CC) $(CFLAGS) -o hall.out -Wl,-Map,hall.map,hall.o
+
+hall.o : hall.c
+	$(CC) $(CFLAGS) -Os -c hall.c
+
+clean : 
+	rm -f *.o *.out *.map *.hex
+

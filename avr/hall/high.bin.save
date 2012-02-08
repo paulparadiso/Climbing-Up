@@ -1,0 +1,1 @@
+0b11011101 avrdude -c stk500 -p m16 -P /dev/ttyUSB0 -U flash:w:rom.hex make sd nano high.bin

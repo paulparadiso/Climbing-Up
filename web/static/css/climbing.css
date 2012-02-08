@@ -1,0 +1,95 @@
+#wrapper{
+    border: 1px solid black;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    width: 600px;
+    height: 500px;
+}
+
+.control{
+    width: 300px;
+    height: 250px;
+    border-bottom: 1px solid black;
+}
+
+#lift-control{
+   border-right: 1px solid black;
+}
+
+#lift{
+    position: relative;
+    top: 45px;
+    left: 100px;
+    width: 50px;
+    height: 160px;
+    border: 1px solid black;
+}
+
+#lift-control-buttons{
+    position: relative;
+    top: -55px;
+    left: 160px;
+}
+
+.lift-icon{
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    margin-left: 2px;
+}
+
+#lift-extras{
+	position: relative;
+	top: -83px;
+	left: 190px;
+}
+
+#lift-details{
+	position: relative;
+	top: -80px;
+	left: 160px;
+}
+
+#video-control{
+    position: relative;
+    left: 300px;
+    top: -251px;
+}
+
+#preview{
+    position: relative;
+    left: 70px;
+    top: 45px;
+    width: 160px;
+    height: 120px;
+    background-color: black;
+    #margin-left: 70px;
+    #margin-top: 30px;
+}
+
+#control-buttons{
+    position: relative;
+    top: 70px;
+    left: 55px;
+    height:20px;
+    width: 190px;
+    border: 1px solid black;
+}
+
+.icon{
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    margin-left: 2px;
+    float: left;
+}
+
+#video-time{
+    position: relative;
+    left: 114px;
+    margin-top: 1px;
+    width: 68px;
+    height: 16px;
+    border: 1px solid black;
+}
